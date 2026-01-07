@@ -1,11 +1,11 @@
-# Agent-Based Epidemic Simulation
+# Simulação Epidêmica Baseada em Agentes
 
-This repository contains an agent-based epidemic simulation developed for the Computing Epidemiology course.
+Este repositório contém uma simulação de propagação de epidemias baseada em agentes, desenvolvida como parte da disciplina de **Computing Epidemiology**. O modelo representa indivíduos como agentes que se movimentam em uma grade bidimensional e interagem localmente, permitindo o estudo da dinâmica de disseminação de doenças infecciosas.
 
-## Requirements
+## Requisitos
 - Python 3.x
 - numpy
 - matplotlib
 
-## How to run
+## Como executar
 python agent_based_epidemic.py
