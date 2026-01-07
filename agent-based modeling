@@ -8,19 +8,22 @@ INFECTED = 1
 RECOVERED = 2
 DEAD = 3
 
+
 class Agent:
-    def __init__(self, x, y, state=SUSCEPTIBLE):
+    def _init_(self, x, y, state=SUSCEPTIBLE):
         self.x = x
         self.y = y
         self.state = state
         self.infected_time = 0
 
+
 class EpidemicSimulation:
-    def __init__(self, grid_size=50, population=500, beta=0.3, recovery_time=20, mortality=0.02):
+    def _init_(self, grid_size=50, population=500, beta=0.3, recovery_time=20, mortality=0.02):
         self.grid_size = grid_size
         self.beta = beta
         self.recovery_time = recovery_time
         self.mortality = mortality
+
         self.grid = np.full((grid_size, grid_size), None)
         self.agents = []
         self.history = []
@@ -28,7 +31,11 @@ class EpidemicSimulation:
         self._init_population(population)
 
     def _init_population(self, population):
-        positions = random.sample([(i, j) for i in range(self.grid_size) for j in range(self.grid_size)], population)
+        positions = random.sample(
+            [(i, j) for i in range(self.grid_size) for j in range(self.grid_size)],
+            population
+        )
+
         for idx, (x, y) in enumerate(positions):
             state = INFECTED if idx == 0 else SUSCEPTIBLE
             agent = Agent(x, y, state)
@@ -36,20 +43,23 @@ class EpidemicSimulation:
             self.grid[x, y] = agent
 
     def neighbors(self, agent):
-        dirs = [(-1,0),(1,0),(0,-1),(0,1)]
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         result = []
-        for dx, dy in dirs:
+
+        for dx, dy in directions:
             nx, ny = agent.x + dx, agent.y + dy
             if 0 <= nx < self.grid_size and 0 <= ny < self.grid_size:
                 neighbor = self.grid[nx, ny]
                 if neighbor is not None:
                     result.append(neighbor)
+
         return result
 
     def move_agent(self, agent):
-        dirs = [(-1,0),(1,0),(0,-1),(0,1)]
-        random.shuffle(dirs)
-        for dx, dy in dirs:
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        random.shuffle(directions)
+
+        for dx, dy in directions:
             nx, ny = agent.x + dx, agent.y + dy
             if 0 <= nx < self.grid_size and 0 <= ny < self.grid_size:
                 if self.grid[nx, ny] is None:
@@ -61,10 +71,12 @@ class EpidemicSimulation:
     def step(self):
         random.shuffle(self.agents)
 
+        # Movimento
         for agent in self.agents:
             if agent.state != DEAD:
                 self.move_agent(agent)
 
+        # Interações
         for agent in self.agents:
             if agent.state == SUSCEPTIBLE:
                 for n in self.neighbors(agent):
@@ -84,9 +96,16 @@ class EpidemicSimulation:
         self.record()
 
     def record(self):
-        counts = {SUSCEPTIBLE:0, INFECTED:0, RECOVERED:0, DEAD:0}
+        counts = {
+            SUSCEPTIBLE: 0,
+            INFECTED: 0,
+            RECOVERED: 0,
+            DEAD: 0
+        }
+
         for agent in self.agents:
             counts[agent.state] += 1
+
         self.history.append(counts)
 
     def run(self, steps=200):
@@ -99,19 +118,19 @@ class EpidemicSimulation:
         r = [h[RECOVERED] for h in self.history]
         d = [h[DEAD] for h in self.history]
 
-        plt.figure(figsize=(8,5))
-        plt.plot(s, label='Susceptible')
-        plt.plot(i, label='Infected')
-        plt.plot(r, label='Recovered')
-        plt.plot(d, label='Dead')
-        plt.xlabel('Time steps')
-        plt.ylabel('Population')
+        plt.figure(figsize=(8, 5))
+        plt.plot(s, label="Susceptible")
+        plt.plot(i, label="Infected")
+        plt.plot(r, label="Recovered")
+        plt.plot(d, label="Dead")
+        plt.xlabel("Time steps")
+        plt.ylabel("Population")
         plt.legend()
         plt.tight_layout()
         plt.show()
 
 
-if __name__ == '__main__':
+if _name_ == "_main_":
     sim = EpidemicSimulation()
     sim.run()
     sim.plot()
